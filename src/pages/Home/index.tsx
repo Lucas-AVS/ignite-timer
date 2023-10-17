@@ -13,10 +13,10 @@ import Countdown from "./Countdown";
 import { CyclesContext } from "../../contexts/CyclesContext";
 
 const newCycleFormValidationSchema = z.object({
-  task: z.string().min(1, "Informe a tarefa"),
+  task: z.string().min(5, "Informe a tarefa"),
   minutesAmount: z
     .number()
-    .min(1, "O ciclo precisa ser de no minimo 5 minutos")
+    .min(5, "O ciclo precisa ser de no minimo 5 minutos")
     .max(90, "O ciclo precisa ser de no maximo 90 minutos"),
 });
 
