@@ -52,8 +52,8 @@ export function CyclesContextProvider({
           return {
             ...state,
             cycles: state.cycles.map((cycle) => {
-              if (cycle.id === activeCycleId) {
-                return { ...cycle, finishedDate: new Date() };
+              if (cycle.id === state.activeCycleId) {
+                return { ...cycle, finishDate: new Date() };
               } else {
                 return cycle;
               }
@@ -64,7 +64,7 @@ export function CyclesContextProvider({
           return {
             ...state,
             cycles: state.cycles.map((cycle) => {
-              if (cycle.id === activeCycleId) {
+              if (cycle.id === state.activeCycleId) {
                 return { ...cycle, interruptedDate: new Date() };
               } else {
                 return cycle;
@@ -82,23 +82,13 @@ export function CyclesContextProvider({
     }
   );
 
-  const { cycles, activeCycleId } = cyclesState;
-
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
-  const currentCycle = cycles.find((cycle) => cycle.id == activeCycleId);
+  const { cycles, activeCycleId } = cyclesState;
+  const currentCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   function setSecondsPassed(seconds: number) {
     setAmountSecondsPassed(seconds);
-  }
-
-  function markCurrentCycleAsFinished() {
-    dispatch({
-      type: "MARK_CURRENT_CYCLE_AS_FINISHED",
-      payload: {
-        activeCycleId,
-      },
-    });
   }
 
   const createNewCycle = (data: ICreateCycleData) => {
@@ -120,14 +110,23 @@ export function CyclesContextProvider({
     setAmountSecondsPassed(0);
   };
 
-  const interruptCurrentCycle = () => {
+  function markCurrentCycleAsFinished() {
+    dispatch({
+      type: "MARK_CURRENT_CYCLE_AS_FINISHED",
+      payload: {
+        activeCycleId,
+      },
+    });
+  }
+
+  function interruptCurrentCycle() {
     dispatch({
       type: "INTERRUPT_CURRENT_CYCLE",
       payload: {
         activeCycleId,
       },
     });
-  };
+  }
 
   return (
     <CyclesContext.Provider
